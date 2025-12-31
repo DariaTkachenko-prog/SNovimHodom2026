@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>С Новым Годом🎄</title>
+
+  <!-- Open Graph preview -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="С Новым Годом 🎄">
+  <meta property="og:description" content="Выберите ёлочку и набор игрушек, украсьте её и создайте новогоднее настроение.">
+  <meta property="og:image" content="https://dariatkachenko-prog.github.io/SNovыmHodom2026/preview.jpg">
+  <meta property="og:url" content="https://dariatkachenko-prog.github.io/SNovыmHodom2026/">
+  <meta property="og:site_name" content="Новогодняя ёлка">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="С Новым Годом 🎄">
+  <meta name="twitter:description" content="Интерактивная новогодняя игра: укрась свою ёлку.">
+  <meta name="twitter:image" content="https://dariatkachenko-prog.github.io/SNovыmHodom2026/preview.jpg">
+
+
+  <meta name="description" content=" Выберите елочку и набор игрушек, украсьте ее." />
+  <meta name="keywords" content="Новый год." />
+
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style_github_fixed_v2_updated_v2.css">
+</head>
+
+<body>
+  <canvas id="confetti-canvas" aria-hidden="true"></canvas>
+
+  <!-- Кнопка «Почати спочатку» завжди вгорі праворуч -->
+  <div class="top-controls" aria-label="Керування">
+    <button class="reset-btn" id="resetBtn" type="button">Начать сначала</button>
+  </div>
+
+  <div class="card">
+    <h1><span class="h1-line line1">Поздравляем <br> с Новым Годом🎄</span></h1>
+
+    <section class="tree-game" id="treeGame" aria-label="Украсьте ёлочку">
+      <div class="game-hint" id="gameHint">
+        Выбери елку и набор игрушек, которыми вы хотите ее украсить 👇
+      </div>
+
+      <!-- Стартовий екран: вибір ялинки + вибір подарунка -->
+      <div class="start-choice" id="startChoice" aria-label="Вибір ялинки і подарунка">
+        <div class="choice-block" aria-label="Вибір ялинки">
+          <div class="choice-title">Выбери елочку</div>
+          <div class="choices" id="treeChoice">
+            <button class="choice-btn" type="button" data-tree="1" aria-label="Ялинка 1">
+              <img class="choice-img" src="tree_1_choice.png" alt="Ялинка 1" draggable="false">
+            </button>
+            <button class="choice-btn" type="button" data-tree="2" aria-label="Ялинка 2">
+              <img class="choice-img" src="tree_2_choice.png" alt="Ялинка 2" draggable="false">
+            </button>
+            <button class="choice-btn" type="button" data-tree="3" aria-label="Ялинка 3">
+              <img class="choice-img" src="tree_3_choice.png" alt="Ялинка 3" draggable="false">
+            </button>
+          </div>
+        </div>
+
+        <div class="choice-block" aria-label="Выбери набор игрушек">
+          <div class="choice-title">Выбери набор игрушек</div>
+          <div class="choices" id="giftChoice">
+            <button class="choice-btn" type="button" data-gift="1" aria-label="Подарунок 1">
+              <img class="choice-img" src="gift_1.png" alt="Подарунок 1" draggable="false">
+            </button>
+            <button class="choice-btn" type="button" data-gift="2" aria-label="Подарунок 2">
+              <img class="choice-img" src="gift_2.png" alt="Подарунок 2" draggable="false">
+            </button>
+            <button class="choice-btn" type="button" data-gift="3" aria-label="Подарунок 3">
+              <img class="choice-img" src="gift_3.png" alt="Подарунок 3" draggable="false">
+            </button>
+          </div>
+        </div>
+
+        <div class="continue-wrap">
+          <button class="continue-btn" id="continueBtn" type="button" disabled>Продолжить</button>
+        </div>
+      </div>
+
+      <!-- Поле гри (після «Продовжити») -->
+      <div class="game-area hidden" id="gameArea" aria-label="Гра: прикраса ялинки">
+        <div class="playfield" id="playfield" aria-label="Поле гри">
+          <div class="tree-zone" id="treeZone" aria-label="Ялинка">
+            <img class="tree" id="treeImg" src="" alt="Ялинка" draggable="false">
+          </div>
+          <!-- Іграшки створюються JS-ом -->
+        </div>
+</div>
+    </section>
+
+    <!-- Опційний блок привітання (залишено, але він не впливає на гру) -->
+    <div class="congrats-wrapper hidden" aria-live="polite">
+      <div class="congrats-text">
+        <div class="congrats-text-inner">
+          <p>
+<span class="line">🎄 С Новым годом! ✨</span><br />
+<span class="line">Пусть будет больше радости 😊</span><br />
+<span class="line">Тепла, уюта и приятных сюрпризов 🎁</span><br />
+<span class="line">Пусть мечты сбываются в новом году ⭐</span><br /><br />
+
+
+          </p>
+        </div>
+      </div>
+</div>
+  </div>
+
+  <audio id="bg-music" src="music.mp3" loop></audio>
+  <audio id="open-sound" src="open.mp3" preload="auto"></audio>
+  <audio id="click-sound" src="mouse-click.mp3" preload="auto"></audio>
+
+  <script src="script_github_updated.js"></script>
+</body>
+</html>

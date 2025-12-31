@@ -1,0 +1,485 @@
+/* === Base === */
+:root{
+  --main-font: 'Dancing Script', cursive, sans-serif;
+  --deep-violet: #2E003E;
+  --btn: #3B82F6;
+}
+
+html{ overflow-x:hidden; }
+*,*::before,*::after{ box-sizing:border-box; }
+
+body{
+  margin:0;
+  padding:0;
+  min-height:100vh;
+  background:#f0f0f0 url('bg.png') no-repeat center center fixed;
+  background-size:cover;
+  color:var(--deep-violet);
+  text-align:center;
+  font-family:var(--main-font);
+  overflow-x:hidden;
+}
+
+.card{
+  margin:40px auto;
+  padding:20px;
+  max-width:980px;
+  width:95%;
+  border-radius:20px;
+  position:relative;
+}
+
+/* === Title === */
+h1{
+  margin:10px auto 10px;
+  line-height:1.2;
+  max-width:900px;
+}
+
+.h1-line{
+  display:block;
+  opacity:0;
+  transform:translateY(10px);
+  animation:fadeInUp .8s ease forwards;
+  color:var(--deep-violet);
+  font-size:2.3rem;
+  font-weight:700;
+  letter-spacing:.5px;
+  margin-bottom:10px;
+}
+@keyframes fadeInUp{ to{opacity:1; transform:translateY(0);} }
+
+/* === Confetti canvas === */
+#confetti-canvas{
+  position:fixed;
+  inset:0;
+  width:100vw;
+  height:100vh;
+  pointer-events:none;
+  z-index:1000;
+}
+
+.hidden{ display:none !important; opacity:0 !important; visibility:hidden !important; pointer-events:none !important; }
+
+/* === Top controls (reset always visible) === */
+.top-controls{
+  position:fixed;
+  top:14px;
+  right:14px;
+  z-index:1200;
+}
+
+/* === Tree game === */
+.tree-game{ max-width:980px; margin:0 auto; }
+
+.game-hint{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+  max-width:820px;
+  padding:0px 16px;
+  font-size:1.05rem;
+  font-weight:650;
+  font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  letter-spacing:.2px;
+  line-height:1.25;
+  backdrop-filter:blur(10px);
+  margin:6px auto 12px;
+}
+
+/* === Start choices (tree + gift) === */
+.start-choice{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:18px;
+  margin-top:10px;
+  align-items:start;
+}
+
+.choice-block{
+  background:linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.70));
+  border:1px solid rgba(116,5,107,.16);
+  border-radius:18px;
+  padding:14px 12px;
+  box-shadow:0 10px 22px rgba(46,0,62,.08);
+  backdrop-filter:blur(10px);
+}
+
+.choice-title{
+  font-family:system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  font-weight:750;
+  letter-spacing:.2px;
+  margin:2px 0 10px;
+}
+
+.choices{
+  display:flex;
+  justify-content:center;
+  gap:14px;
+  flex-wrap:wrap;
+}
+
+.choice-btn{
+  border:2px solid transparent;
+  background:transparent;
+  border-radius:16px;
+  padding:6px;
+  cursor:pointer;
+  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease;
+}
+
+.choice-btn:hover{ transform:scale(1.03); }
+
+.choice-btn.selected{
+  border-color: rgba(116,5,107,.55);
+  box-shadow:0 10px 22px rgba(46,0,62,.12);
+}
+
+.choice-img{
+  width:125px;
+  height:auto;
+  display:block;
+  filter:drop-shadow(0 14px 26px rgba(0,0,0,.14));
+  user-select:none;
+  -webkit-user-drag:none;
+}
+
+.continue-wrap{ grid-column:1 / -1; margin-top:6px; }
+
+.continue-btn{
+  border:0;
+  border-radius:999px;
+  padding:12px 28px;
+  font-size:1.1rem;
+  cursor:pointer;
+  background:var(--btn);
+  color:#fff;
+  box-shadow:0 10px 22px rgba(46,0,62,.18);
+}
+
+.continue-btn:disabled{
+  opacity:.55;
+  cursor:not-allowed;
+  box-shadow:none;
+}
+
+/* === Playfield === */
+/* Pull the whole game scene up so the tree sits right under the hint text */
+/* Raised a LOT more so the scene sits much higher */
+.game-area{ margin-top:0; }
+
+.controls{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:18px;
+}
+
+.playfield{
+  position:relative;
+  width:100%;
+  max-width:980px;
+  /* Reduce excessive empty space under the tree */
+  height: 480px;
+  margin:0 auto;
+}
+
+.tree-zone{
+  position:absolute;
+  left:50%;
+  /* position of the whole scene (higher -> smaller numbers) */
+  top:clamp(36px, 7vh, 80px);
+  transform:translateX(-50%);
+  /* smaller tree */
+  width:clamp(240px, 28vw, 290px);
+  height:clamp(300px, 36vw, 370px);
+}
+
+/* === Decorating mode: make the tree a bit bigger === */
+body.decorating .playfield{ height:540px; }
+body.decorating .tree-zone{
+  /* keep the same top so it does NOT jump */
+top: clamp(24px, 4vh, 56px);
+
+  transform:translateX(-50%);
+  /* a bit bigger while decorating, but still smaller than before */
+  width:clamp(260px, 30vw, 320px);
+  height:clamp(325px, 40vw, 410px);
+}
+
+/* шар вогників поверх ялинки */
+.lights-layer{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:2;
+}
+
+.light{
+  position:absolute;
+  width:10px;
+  height:10px;
+  border-radius:999px;
+
+  /* Brighter bulb with stronger glow */
+  background:
+    radial-gradient(circle at 35% 35%,
+      rgba(255,255,255,.98),
+      rgba(255,255,255,.25) 45%,
+      rgba(255,255,255,0) 68%),
+    radial-gradient(circle,
+      rgba(255, 230, 120, 1),
+      rgba(255, 120, 70, .55) 55%,
+      rgba(255, 120, 70, 0) 75%);
+
+  /* Extra glow layers */
+  box-shadow:
+    0 0 10px rgba(255,220,140,.55),
+    0 0 22px rgba(255,140,90,.35);
+
+  filter:drop-shadow(0 0 10px rgba(255,210,120,.75));
+  opacity:.35;
+  transform:scale(.9);
+  animation:twinkle 1.05s ease-in-out infinite;
+}
+
+@keyframes twinkle{
+  0%{
+    opacity:.28;
+    transform:scale(.85);
+    filter:drop-shadow(0 0 8px rgba(255,210,120,.55));
+    box-shadow:0 0 8px rgba(255,220,140,.35), 0 0 18px rgba(255,140,90,.22);
+  }
+  45%{
+    opacity:1;
+    transform:scale(1.25);
+    filter:drop-shadow(0 0 16px rgba(255,230,150,.95));
+    box-shadow:0 0 14px rgba(255,240,180,.85), 0 0 34px rgba(255,140,90,.55);
+  }
+  100%{
+    opacity:.35;
+    transform:scale(.95);
+    filter:drop-shadow(0 0 10px rgba(255,210,120,.70));
+    box-shadow:0 0 10px rgba(255,220,140,.50), 0 0 22px rgba(255,140,90,.32);
+  }
+}
+
+
+.tree{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  user-select:none;
+  -webkit-user-drag:none;
+  pointer-events:none;
+  position:relative;
+  z-index:1;
+}
+
+.toy{
+  position:absolute;
+  width:38px;
+  height:44px;
+  z-index:3;
+  user-select:none;
+  -webkit-user-drag:none;
+  touch-action:none;
+  cursor:grab;
+  filter:drop-shadow(0 12px 18px rgba(0,0,0,.18));
+}
+
+.toy.dragging{ cursor:grabbing; filter:drop-shadow(0 16px 26px rgba(0,0,0,.22)); }
+
+.reset-btn{
+  background:var(--btn);
+  color:#fff;
+  border:0;
+  border-radius:999px;
+  padding:12px 20px;
+  font-size:1.02rem;
+  cursor:pointer;
+  box-shadow:0 10px 22px rgba(46,0,62,.18);
+}
+.reset-btn:hover{ filter:brightness(1.03); }
+
+.lights-btn{
+  background:#ffffff;
+  color:var(--deep-violet);
+  border:2px solid rgba(84, 50, 138, 1);
+  border-radius:999px;
+  padding:12px 26px;
+  font-size:1.1rem;
+  cursor:pointer;
+  box-shadow:0 10px 22px rgba(46,0,62,.12);
+  backdrop-filter:blur(8px);
+}
+.lights-btn:hover{ filter:brightness(1.02); }
+
+.save-btn{
+  background:#ffffff;
+  color:var(--deep-violet);
+  border:2px solid rgba(116,5,107,.35);
+  border-radius:999px;
+  padding:12px 26px;
+  font-size:1.1rem;
+  cursor:pointer;
+  box-shadow:0 10px 22px rgba(46,0,62,.12);
+  backdrop-filter:blur(8px);
+}
+.save-btn:hover{ filter:brightness(1.02); }
+
+
+/* === Mobile === */
+@media (max-width: 768px){
+  body{
+    background:#f0f0f0 url('bg-mobile.png') no-repeat center center fixed;
+    background-size:100% 100%;
+  }
+
+  .card{
+    margin:16px auto;
+    padding:15px;
+    width:92%;
+  }
+
+  /* уменьшаем заголовок */
+  .h1-line{
+    font-size:1.5rem; /* или 1.15rem если нужно ещё меньше */
+  }
+
+  /* опускаем заголовок ниже */
+  h1{
+    margin-top:48px;
+  }
+
+  .top-controls{ top:10px; right:10px; }
+  .reset-btn{ padding:10px 16px; font-size:.98rem; }
+
+  .start-choice{ grid-template-columns:1fr; }
+  .choice-img{ width:64px; }
+
+  /* Less empty space on mobile (keep the tree right under the hint) */
+  /* Raised a lot more so the scene sits much higher */
+  .game-area{ margin-top:0; }
+  .playfield{ height:520px; margin-top:14px; }
+    /* keep tree positioning stable on zoom; no overrides here */
+
+  .toy{ width:34px; height:34px; }
+  .game-hint{ font-size:1rem; padding:10px 14px; margin:6px auto 10px; }
+
+  .controls{ flex-wrap:wrap; }
+  .lights-btn{ font-size:1rem; padding:11px 16px; }
+  .light{ width:8px; height:8px; }
+}
+
+
+
+/* === Garland background twinkle === */
+/* Subtle animated shimmer BEHIND the tree when the garland is on */
+.tree-zone{ isolation:isolate; }
+.tree-zone.lights-on::before{
+  content:"";
+  position:absolute;
+  inset:-18% -22%;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 42% 35%, rgba(255,255,255,.55), rgba(255,255,255,0) 55%),
+    radial-gradient(circle at 62% 48%, rgba(255,220,170,.42), rgba(255,220,170,0) 60%),
+    radial-gradient(circle at 45% 72%, rgba(255,200,240,.28), rgba(255,200,240,0) 62%);
+  filter: blur(6px);
+  opacity:.35;
+  mix-blend-mode: screen;
+  animation: lcGlowPulse 2.2s ease-in-out infinite;
+}
+
+/* Sparkle layer (soft, not "glittery") */
+.tree-zone.lights-on::after{
+  content:"";
+  position:absolute;
+  inset:-10% -14%;
+  z-index:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 18% 22%, rgba(255,255,255,.55), rgba(255,255,255,0) 10%),
+    radial-gradient(circle at 82% 28%, rgba(255,255,255,.45), rgba(255,255,255,0) 12%),
+    radial-gradient(circle at 66% 62%, rgba(255,245,220,.40), rgba(255,245,220,0) 12%),
+    radial-gradient(circle at 28% 70%, rgba(255,245,220,.38), rgba(255,245,220,0) 11%),
+    radial-gradient(circle at 50% 45%, rgba(255,255,255,.42), rgba(255,255,255,0) 12%);
+  opacity:.22;
+  mix-blend-mode: screen;
+  animation: lcSparkTwinkle 1.25s ease-in-out infinite;
+}
+
+@keyframes lcGlowPulse{
+  0%{ opacity:.22; transform:scale(.98); }
+  45%{ opacity:.48; transform:scale(1.02); }
+  100%{ opacity:.28; transform:scale(1.00); }
+}
+
+@keyframes lcSparkTwinkle{
+  0%{ opacity:.10; filter: blur(0.5px); }
+  35%{ opacity:.28; filter: blur(0px); }
+  70%{ opacity:.16; filter: blur(0.8px); }
+  100%{ opacity:.12; filter: blur(0.5px); }
+}
+
+/* === Finale (auto after decorating) === */
+.tree-game{
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+body.finale .tree-game{
+  opacity: 0;
+  transform: translateY(-10px);
+  pointer-events: none;
+}
+
+/* Congratulations block animation */
+.congrats-wrapper{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:0;
+  margin-top:-80px;
+
+  opacity:0;
+  transform: translateY(12px);
+  transition: opacity 1.2s ease, transform 1.2s ease;
+}
+
+.congrats-wrapper.show{
+  opacity:1;
+  transform: translateY(0);
+}
+
+/* Congrats text styling */
+.congrats-text{
+  text-align:center;
+  font-family: "Dancing Script", cursive;
+  font-size: clamp(26px, 3.2vw, 44px);
+  line-height: 1.35;
+}
+
+.congrats-text p{
+  margin:0;
+}
+
+.congrats-text .signature{
+  font-size: 0.85em;
+}
+
+
+@media (max-width: 768px){
+  .congrats-wrapper{
+    margin-top:-500px;
+    flex-direction:column;
+    gap:0;
+  }
+}
+
